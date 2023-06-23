@@ -1,0 +1,9 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+    
+mon_panier_add:
+    path: /mon-panier/add/{id}
+    controller: App\Controller\MonPanierController::add
