@@ -107,4 +107,10 @@ class HairSalon
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        // Return a string representation of the object
+        return $this->postalAdress;
+    }
 }

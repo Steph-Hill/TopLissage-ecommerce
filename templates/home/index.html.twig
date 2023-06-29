@@ -20,7 +20,7 @@
         <p>{{product.description|striptags }}</p> {# striptags supprime le format des balise html visible #}
         <h5>{{product.price}} €</h5>
         <h5>{{product.quantity}}</h5>
-        <a href="{{ path('mon_panier_add', {'id': product.id}) }}" class="btn btn-dark">Ajouter au panier</a>
+        <a href="{{ path('cart_add', {'id': product.id}) }}" class="btn btn-dark">Ajouter au panier</a>
         <hr>
     </ul>
     

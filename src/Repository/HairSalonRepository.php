@@ -16,7 +16,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class HairSalonRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry
+                                )
     {
         parent::__construct($registry, HairSalon::class);
     }
@@ -39,20 +40,19 @@ class HairSalonRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return HairSalon[] Returns an array of HairSalon objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('h')
-//            ->andWhere('h.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('h.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return HairSalon[] Returns an array of HairSalon objects
+     */
+    public function findByCodePostal($postalAdress): array
+{
+    return $this->createQueryBuilder('s')
+        ->andWhere('s.postalAdress LIKE :postalAdress')
+        ->setParameter('postalAdress', '%' . $postalAdress . '%')
+        ->orderBy('s.id', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
+
 
 //    public function findOneBySomeField($value): ?HairSalon
 //    {
