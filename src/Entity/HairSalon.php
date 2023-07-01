@@ -108,9 +108,10 @@ class HairSalon
         return $this;
     }
 
+    /* Ajout de la fonction __tostring() */
     public function __toString(): string
     {
-        // Return a string representation of the object
+        // Convertis le champ le en sting
         return $this->postalAdress;
     }
 }

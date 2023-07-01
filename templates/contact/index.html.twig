@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ContactController!{% endblock %}
+
+{% block body %}
+<div>
+
+    {% include "includes/_flashes.html.twig" %}
+
+    {{form_start(form)}}
+        {{form_row(form.fullName)}}
+        {{form_row(form.email)}}
+        {{form_row(form.phone)}}
+        {{form_row(form.addressPostal)}}
+        {{form_row(form.codeZip)}}
+        {{form_row(form.sujet)}}
+        {{form_row(form.message)}}
+    {{form_end(form)}}
+
+</div>
+{% endblock %}
