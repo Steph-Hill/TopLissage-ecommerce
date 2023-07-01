@@ -16,10 +16,13 @@ class SearchController extends AbstractController
     public function index(
         HairSalonRepository $hairSalonRepository,
         Request $request
-    ): Response {
+    ): Response 
+    {
         $searchData = new SearchData();
+
         $form = $this->createForm(SearchType::class, $searchData);
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
             /* recupere l'element  */
             $searchData->page = $request->query->getInt('page', 1);
