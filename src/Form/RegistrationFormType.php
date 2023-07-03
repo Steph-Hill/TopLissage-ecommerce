@@ -2,15 +2,16 @@
 
 namespace App\Form;
 
+use App\Form\HairSalonType;
 use App\Entity\Administrator;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -44,13 +45,25 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('condition', CheckboxType::class,[
+                'label' => 'Possedez vous un salon ?',
+                'required' => false,
+            ])
         ;
+
+        if($options['condition'])
+        {
+            $builder->add('hairSalon',HairSalonType::class,[
+                'label' => `ajout d'un salon`
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Administrator::class,
+            'condition' => false,
         ]);
     }
 }

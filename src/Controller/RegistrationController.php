@@ -30,6 +30,15 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            // Récupérer les données du formulaire
+            $data = $form->getData();
+
+            // Accéder au formulaire enfant si la condition est remplie
+            if ($data->getCondition()) {
+                $hairSalon = $data->getChildEntity();
+                // Effectuer des actions supplémentaires avec le formulaire enfant
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
