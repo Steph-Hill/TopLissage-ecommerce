@@ -12,7 +12,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+
+
+#[Route('/admin')]
 class DashboardController extends AbstractDashboardController
 {
 
@@ -20,16 +24,31 @@ class DashboardController extends AbstractDashboardController
         
     }
 
-    #[Route('/admin', name: 'admin')]
+    #[Route('/mon-dash', name: 'admin')]
     public function index(): Response
     {
-        $url = $this->adminUrlGenerator
-                    ->setController(ProductCrudController::class)
-                    ->generateUrl();
-
-        return $this->redirect($url);
-
-        // Option 1. You can make your dashboard redirect to some common page of your backend
+        try {
+            $this->denyAccessUnlessGranted("ROLE_ADMIN");
+    
+            // Votre code pour les utilisateurs avec le rôle ROLE_ADMIN
+    
+            $url = $this->adminUrlGenerator
+                ->setController(ProductCrudController::class)
+                ->generateUrl();
+    
+            return $this->redirect($url);
+        } catch (AccessDeniedException $exception) {
+            $this->addFlash('danger', "Cette partie du site est réservée.");
+    
+            if ($this->isGranted("ROLE_USER")) {
+                return $this->redirectToRoute('user_dashboard');
+            } else {
+                return $this->redirectToRoute('app_login');
+            }
+        }
+    }
+    
+// Option 1. You can make your dashboard redirect to some common page of your backend
         //
         // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
         // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
@@ -44,8 +63,6 @@ class DashboardController extends AbstractDashboardController
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
         // return $this->render('some/path/my-dashboard.html.twig');
-    }
-
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()

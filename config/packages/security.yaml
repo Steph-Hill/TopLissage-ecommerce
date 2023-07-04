@@ -39,7 +39,7 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/home, roles: ROLE_USER }
         # Page accessible pour les professionnels et les administrateurs
-        - { path: ^/professionals, roles: ROLE_PROFESSIONAL }
+        - { path: ^/professional, roles: ROLE_PROFESSIONAL }
         # Page accessible seulement pour les administrateurs
         - { path: ^/admin, roles: ROLE_ADMIN }
 
