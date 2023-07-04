@@ -7,3 +7,6 @@ controllers:
 mon_panier_add:
     path: /mon-panier/add/{id}
     controller: App\Controller\MonPanierController::add
+    
+2fa_login_check:
+    path: /2fa_check
