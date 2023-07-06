@@ -72,13 +72,13 @@ class OrderController extends AbstractController
             /* on initialise le delivery */
             $delivery = $form->get('addresses')->getData();
             $deliveryForOrder = $delivery->getFirstName() . '' . $delivery->getLastName();
-            $deliveryForOrder .= '<\br>' . $delivery->getPhone();
+            $deliveryForOrder .= '<br/>' . $delivery->getPhone();
             if ($delivery->getCompany()) {
                 $deliveryForOrder .= '-' . $delivery->getCompany();
             }
-            $deliveryForOrder .= '<\br>' . $delivery->getAddress();
-            $deliveryForOrder .= '<\br>' . $delivery->getPostalCode() . '-' . $delivery->getCity();
-            $deliveryForOrder .= '<\br>' . $delivery->getCountry();
+            $deliveryForOrder .= '<br/>' . $delivery->getAddress();
+            $deliveryForOrder .= '<br/>' . $delivery->getPostalCode() . '-' . $delivery->getCity();
+            $deliveryForOrder .= '<br/>' . $delivery->getCountry();
 
             /* on initialise notre entity order */
             $order = new Order();
