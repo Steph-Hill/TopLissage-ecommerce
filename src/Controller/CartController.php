@@ -48,7 +48,7 @@ class CartController extends AbstractController
     #[Route('/mon-panier/removeAll', name: 'cart_removeAll')]
     public function removeAll(CartService $cartService): Response
     {
-        $cartService->revoveCartAll();
+        $cartService->removeCartAll();
 
         return $this->redirectToRoute('index');
     }
