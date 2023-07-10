@@ -1,16 +1,16 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Administrator;
+use App\Entity\HairSalon;
 use App\Form\RegistrationFormType;
+use App\Form\HairSalonType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -18,36 +18,48 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new Administrator();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+        $registrationForm = $this->createForm(RegistrationFormType::class, $user);
+        $registrationForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
+        if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
+            // Encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $registrationForm->get('plainPassword')->getData()
                 )
             );
 
-            // Récupérer les données du formulaire
-            $data = $form->getData();
+            // Get the form data
+            $data = $registrationForm->getData();
 
-            // Accéder au formulaire enfant si la condition est remplie
-            if ($data->getCondition()) {
-                $hairSalon = $data->getChildEntity();
-                // Effectuer des actions supplémentaires avec le formulaire enfant
+            // Check if the hair salon condition is true
+            if ($data->isConditions()) {
+                $hairSalon = new HairSalon();
+                $hairSalon->setName($data->getHairSalon()->getName());
+                $hairSalon->setPostalAdress($data->getHairSalon()->getPostalAddress());
+                $hairSalon->setPhone($data->getHairSalon()->getPhone());
+                $hairSalon->setEmploye($data->getHairSalon()->getEmploye());
+                $hairSalon->setChair($data->getHairSalon()->getChair());
+                // Set the professional_id if needed
+                // $hairSalon->setProfessionalId($data->getHairSalon()->getProfessionalId());
+
+                $entityManager->persist($hairSalon);
+                $user->setHairSalon($hairSalon);
             }
 
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
+
+            // Do anything else you need here, like sending an email
 
             return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+            'registrationForm' => $registrationForm->createView(),
+            'form' => $registrationForm->createView(),
+
         ]);
     }
 }

@@ -45,25 +45,33 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('condition', CheckboxType::class,[
+            ->add('conditions', CheckboxType::class,[
                 'label' => 'Possedez vous un salon ?',
                 'required' => false,
             ])
-        ;
+            ->add('conditions', CheckboxType::class, [
+                'label' => 'Possedez vous un salon ?',
+                'required' => false,
+            ])
+            ->add('hairSalon', HairSalonType::class, [
+                'label' => "Ajout d'un salon",
+                'mapped' => false, // Ajoutez cette option pour indiquer que la propriété n'est pas liée à l'entité Administrator
+            ]);
+        
 
-        if($options['condition'])
-        {
-            $builder->add('hairSalon',HairSalonType::class,[
-                'label' => `ajout d'un salon`
+        if ($options['conditions'] === true) {
+            $builder->add('hairSalon', HairSalonType::class, [
+                'label' => "Ajout d'un salon"
             ]);
         }
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Administrator::class,
-            'condition' => false,
+            'conditions' => false,
         ]);
     }
 }
