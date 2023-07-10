@@ -48,6 +48,12 @@ class Administrator implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'administrator', targetEntity: Order::class)]
     private Collection $orders;
 
+    #[ORM\Column]
+    private ?bool $conditions = null;
+
+    #[ORM\ManyToOne(inversedBy: 'administrators')]
+    private ?HairSalon $hairSalon = null;
+
   
     public function __construct()
     {
@@ -202,7 +208,7 @@ class Administrator implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->addresses;
     }
 
-    public function addAddress(Address $address): static
+    public function addAddress(Address $address): self
     {
         if (!$this->addresses->contains($address)) {
             $this->addresses->add($address);
@@ -212,7 +218,7 @@ class Administrator implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeAddress(Address $address): static
+    public function removeAddress(Address $address): self
     {
         if ($this->addresses->removeElement($address)) {
             // set the owning side to null (unless already changed)
@@ -250,6 +256,30 @@ class Administrator implements UserInterface, PasswordAuthenticatedUserInterface
                 $order->setAdministrator(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isConditions(): ?bool
+    {
+        return $this->conditions;
+    }
+
+    public function setConditions(bool $conditions): static
+    {
+        $this->conditions = $conditions;
+
+        return $this;
+    }
+
+    public function getHairSalon(): ?HairSalon
+    {
+        return $this->hairSalon;
+    }
+
+    public function setHairSalon(?HairSalon $hairSalon): static
+    {
+        $this->hairSalon = $hairSalon;
 
         return $this;
     }

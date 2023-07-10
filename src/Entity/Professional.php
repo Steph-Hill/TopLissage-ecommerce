@@ -185,7 +185,10 @@ class Professional implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     
-
+    public function __toString(): string
+    {
+        return $this->getEmail();
+    }
 
    
 
