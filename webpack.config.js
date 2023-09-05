@@ -28,6 +28,10 @@ Encore
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
+    .copyFiles({
+        from: './assets/fonts',
+        to: 'fonts/PlayfairDisplay-Italic-VariableFont_wght.ttf',
+      })
 
     /*
      * FEATURE CONFIG

@@ -21,12 +21,13 @@ class CategoryCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id')->hideOnForm(),
-            TextField::new('name'),
-            DateTimeField::new('updatedAt')->hideOnForm(),
-            DateTimeField::new('createdAt')->hideOnForm(),
+            IdField::new('id')->hideOnForm(), // Champ "id" masqué dans le formulaire d'édition
+            TextField::new('name'), // Champ "name" affiché en tant que champ de texte
+            DateTimeField::new('updatedAt')->hideOnForm(), // Champ "updatedAt" masqué dans le formulaire d'édition
+            DateTimeField::new('createdAt')->hideOnForm(), // Champ "createdAt" masqué dans le formulaire d'édition
         ];
     }
+    
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
