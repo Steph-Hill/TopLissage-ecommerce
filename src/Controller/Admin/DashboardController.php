@@ -12,7 +12,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+
+
+#[Route('/admin')]
 class DashboardController extends AbstractDashboardController
 {
 
@@ -20,16 +24,35 @@ class DashboardController extends AbstractDashboardController
         
     }
 
-    #[Route('/admin', name: 'admin')]
+    #[Route('/mon-dash', name: 'admin')]
     public function index(): Response
     {
-        $url = $this->adminUrlGenerator
-                    ->setController(ProductCrudController::class)
-                    ->generateUrl();
+        try {
+            // Vérification de l'accès avec le rôle ROLE_ADMIN
+            $this->denyAccessUnlessGranted("ROLE_ADMIN");
 
-        return $this->redirect($url);
+            // Génération de l'URL pour le CRUD de l'entité Product
+            $url = $this->adminUrlGenerator
+                ->setController(ProductCrudController::class)
+                ->generateUrl();
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
+            // Redirection vers l'URL du CRUD de l'entité Product
+            return $this->redirect($url);
+        } catch (AccessDeniedException $exception) {
+            // Gestion de l'exception d'accès refusé
+            $this->addFlash('danger', "Cette partie du site est réservée.");
+
+            if ($this->isGranted("ROLE_USER")) {
+                // Redirection vers le tableau de bord utilisateur
+                return $this->redirectToRoute('user_dashboard');
+            } else {
+                // Redirection vers la page de connexion
+                return $this->redirectToRoute('app_login');
+            }
+        }
+    }
+    
+// Option 1. You can make your dashboard redirect to some common page of your backend
         //
         // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
         // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
@@ -44,37 +67,36 @@ class DashboardController extends AbstractDashboardController
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
         // return $this->render('some/path/my-dashboard.html.twig');
-    }
 
-    public function configureDashboard(): Dashboard
-    {
-        return Dashboard::new()
-            ->setTitle('TopLissage');
-    }
-
+        
+    // Configuration des éléments de menu
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::section('E-commerce','fa-solid fa-house');
+        // Section principale "E-commerce"
+        yield MenuItem::section('E-commerce', 'fa-solid fa-house');
 
-        yield MenuItem::subMenu('Ajouter éléments','fa-solid fa-list')->setSubItems([
-            
-            MenuItem::linkToCrud('Nouveau Produit','fas fa-plus',Product::class)
-            ->setAction(Crud::PAGE_NEW),
+        // Sous-menu "Ajouter éléments"
+        yield MenuItem::subMenu('Ajouter éléments', 'fa-solid fa-list')->setSubItems([
+            // Lien pour ajouter un nouveau produit
+            MenuItem::linkToCrud('Nouveau Produit', 'fas fa-plus', Product::class)
+                ->setAction(Crud::PAGE_NEW),
 
-            MenuItem::linkToCrud('Nouvelle Categorie','fas fa-plus',Category::class)
-            ->setAction(Crud::PAGE_NEW),
+            // Lien pour ajouter une nouvelle catégorie
+            MenuItem::linkToCrud('Nouvelle Catégorie', 'fas fa-plus', Category::class)
+                ->setAction(Crud::PAGE_NEW),
 
-            MenuItem::linkToCrud('Nouveau Transporteur','fas fa-plus',Transporter::class)
-            ->setAction(Crud::PAGE_NEW)
-                    
+            // Lien pour ajouter un nouveau transporteur
+            MenuItem::linkToCrud('Nouveau Transporteur', 'fas fa-plus', Transporter::class)
+                ->setAction(Crud::PAGE_NEW)
         ]);
-        yield MenuItem::subMenu('Afficher éléments','fa-solid fa-list')->setSubItems([
 
-            MenuItem::linkToCrud('Les Produits', 'fa-solid fa-warehouse',Product::class),
+        // Sous-menu "Afficher éléments"
+        yield MenuItem::subMenu('Afficher éléments', 'fa-solid fa-list')->setSubItems([
+            // Lien pour afficher tous les produits
+            MenuItem::linkToCrud('Les Produits', 'fa-solid fa-warehouse', Product::class),
 
-            MenuItem::linkToCrud('LesCategorie',"fa-solid fa-newspaper",Category::class)
-            
-                    
+            // Lien pour afficher toutes les catégories
+            MenuItem::linkToCrud('Les Catégories', 'fa-solid fa-newspaper', Category::class)
         ]);
     }
 }

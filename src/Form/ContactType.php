@@ -19,36 +19,59 @@ class ContactType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('fullName', TextType::class,[
-                'label' => 'votre nom/prénom',
+            ->add('fullName', TextType::class, [
+                'label' => 'Votre nom/prénom',
                 'constraints' => [
                     new NotBlank(),
                     new Length([
                         'min' => 5,
                         'max' => 180
                     ])
+                ],
+                'attr' => [
+                    'class' => 'form-control mb-6'
                 ]
             ])
             ->add('email', EmailType::class, [
-                'label' => 'votre email'
+                'label' => 'Votre email',
+                'attr' => [
+                    'class' => 'form-control mb-6'
+                ]
             ])
-            ->add('phone', TelType::class,[
-                'label' => 'tel'
+            ->add('phone', TelType::class, [
+                'label' => 'Téléphone',
+                'attr' => [
+                    'class' => 'form-control mb-6'
+                ]
             ])
-            ->add('addressPostal', TextType::class,[
-                'label' => 'Adress Postal'
+            ->add('addressPostal', TextType::class, [
+                'label' => 'Adresse postale',
+                'attr' => [
+                    'class' => 'form-control mb-6'
+                ]
             ])
-            ->add('codeZip', TextType::class,[
-                'label' => 'Code Postal'
+            ->add('codeZip', TextType::class, [
+                'label' => 'Code postal',
+                'attr' => [
+                    'class' => 'form-control mb-6'
+                ]
             ])
-            ->add('sujet', TextType::class,[
-                'label' => 'Objet'
+            ->add('sujet', TextType::class, [
+                'label' => 'Objet',
+                'attr' => [
+                    'class' => 'form-control mb-6'
+                ]
             ])
-            ->add('message', TextareaType::class)
+            ->add('message', TextareaType::class, [
+                'attr' => [
+                    'class' => 'form-control mb-6',
+                    'rows' => 5
+                ]
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [
-                    'class' => 'd-block mx-auto my-3 col-6 btn btn-primary'
+                    'class' => 'btn btn-primary btn-block mt-4'
                 ]
             ]);
     }

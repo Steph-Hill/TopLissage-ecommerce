@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\HairSalonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: HairSalonRepository::class)]
@@ -30,6 +32,14 @@ class HairSalon
 
     #[ORM\ManyToOne]
     private ?Professional $professional_id = null;
+
+    #[ORM\OneToMany(mappedBy: 'hairSalon', targetEntity: Administrator::class)]
+    private Collection $administrators;
+
+    public function __construct()
+    {
+        $this->administrators = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -113,5 +123,35 @@ class HairSalon
     {
         // Convertis le champ le en sting
         return $this->postalAdress;
+    }
+
+    /**
+     * @return Collection<int, Administrator>
+     */
+    public function getAdministrators(): Collection
+    {
+        return $this->administrators;
+    }
+
+    public function addAdministrator(Administrator $administrator): static
+    {
+        if (!$this->administrators->contains($administrator)) {
+            $this->administrators->add($administrator);
+            $administrator->setHairSalon($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdministrator(Administrator $administrator): static
+    {
+        if ($this->administrators->removeElement($administrator)) {
+            // set the owning side to null (unless already changed)
+            if ($administrator->getHairSalon() === $this) {
+                $administrator->setHairSalon(null);
+            }
+        }
+
+        return $this;
     }
 }
